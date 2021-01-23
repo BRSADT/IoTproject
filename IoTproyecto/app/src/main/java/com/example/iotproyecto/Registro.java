@@ -65,11 +65,13 @@ public class Registro extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(Registro.this, MainActivity.class);
                 startActivity(i);
+
             }
         });
 
-
     }
+
+
 
     public void Registrar() {
         mAuth.createUserWithEmailAndPassword(cuenta, pass)

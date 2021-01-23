@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference myRef;
     private static final int RC_SIGN_IN = 9001;
+    public EditText inputMail;
+    public EditText inputPass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mAuth = FirebaseAuth.getInstance();
+        inputMail = (EditText) findViewById(R.id.inputMail);
+        inputPass = (EditText) findViewById(R.id.inputPass);
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
@@ -67,8 +72,9 @@ public class MainActivity extends AppCompatActivity {
         btnAcceder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, Menu.class);
-                startActivity(i);
+                IniciarSesion();
+               // Intent i = new Intent(MainActivity.this, Menu.class);
+               // startActivity(i);
             }
         });
 
@@ -102,7 +108,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public  void IniciarSesion(){
 
+        mAuth.signInWithEmailAndPassword(inputMail.getText().toString(), inputPass.getText().toString())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("Response", "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Intent i = new Intent(MainActivity.this, Menu.class);
+                            startActivity(i);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("Response", "signInWithEmail:failure", task.getException());
+
+
+                        }
+
+                        // ...
+                    }
+                });
+
+    }
 
     private void firebaseAuthWithGoogle(String idToken) {
         Log.d("Ver", "aqui");
