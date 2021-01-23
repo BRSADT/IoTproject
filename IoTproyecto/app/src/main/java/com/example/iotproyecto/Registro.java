@@ -90,6 +90,9 @@ public class Registro extends AppCompatActivity {
                                             // ...
                                             Toast.makeText(Registro.this, "Registrado en BDD", Toast.LENGTH_SHORT).show();
                                             Log.i("Response",  "Registrado en BDD");
+
+                                            Intent i = new Intent(Registro.this, Menu.class);
+                                            startActivity(i);
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {

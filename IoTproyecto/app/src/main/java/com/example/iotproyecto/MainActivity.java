@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -16,12 +17,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 
@@ -31,11 +36,15 @@ public class MainActivity extends AppCompatActivity {
     private AuthCredential credential;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
     private static final int RC_SIGN_IN = 9001;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("BaseDeDatos");
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -110,6 +119,30 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("GoogleSign", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            user.getUid();
+
+                            myRef.child("Usuarios").child(user.getUid()).setValue(new Usuario(user.getDisplayName(),user.getEmail()))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            // Write was successful!
+                                            // ...
+                                            Toast.makeText(MainActivity.this, "Registrado en BDD", Toast.LENGTH_SHORT).show();
+                                            Log.i("Response",  "Registrado en BDD");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(MainActivity.this, "Error en bdd", Toast.LENGTH_SHORT).show();
+                                            Log.i("Response",  "Error en bdd");
+                                        }
+                                    });
+
+
+
+
                             Intent i = new Intent(MainActivity.this, Menu.class);
                             startActivity(i);
                         } else {
