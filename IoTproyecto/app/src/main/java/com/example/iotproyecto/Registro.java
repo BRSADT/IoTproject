@@ -41,10 +41,11 @@ public class Registro extends AppCompatActivity {
     // private FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_registro);
         database = FirebaseDatabase.getInstance();
          myRef = database.getReference("BaseDeDatos");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro);
+
         txtCuenta = (EditText) findViewById(R.id.txtCuenta);
         txtContra = (EditText) findViewById(R.id.txtContra);
         txtNombre = (EditText) findViewById(R.id.txtNombre);

@@ -41,7 +41,7 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/avatar"
+                    android:id="@+id/avataranalisis"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -63,7 +63,7 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/btnimagen"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
