@@ -4,10 +4,14 @@ from datetime import datetime
 import pyrebase
 config ={
     
-    "apiKey":       "AIzaSyC29H3xXuymo5_4eA8HWIN2ZaFkfT6FZbs",
-    "authDomain":  "iot-rasp-34245.firebaseapp.com",
-    "databaseURL":  "https://iot-rasp-34245-default-rtdb.firebaseio.com",
-    "storageBucket": "iot-rasp-34245.appspot.com"    
+    "apiKey": "AIzaSyAOM_eU6X1MYFw2162jFbulgMo4jWUbzLg",
+    "authDomain": "iotproject-9841c.firebaseapp.com",
+    "databaseURL": "https://iotproject-9841c-default-rtdb.firebaseio.com",
+    "projectId": "iotproject-9841c",
+    "storageBucket": "iotproject-9841c.appspot.com",
+    "messagingSenderId": "178302614682",
+    "appId": "1:178302614682:web:05e900f1a4c57e4f317323",
+    "measurementId": "G-3ZLQM1JE1C"
 }
 def stream_handler(message):
     print(message["event"]) # put
@@ -18,7 +22,7 @@ def stream_handler(message):
 
 firebase = pyrebase.initialize_app(config)
 db=firebase.database()
-my_stream = db.child("ImgEnviadas").stream(stream_handler)
+my_stream = db.child("BaseDeDatos/ImagenesProcesar").stream(stream_handler)
 
 camera = PiCamera()
 i=0;
@@ -33,7 +37,7 @@ while True:
     camera.stop_preview
     storage = firebase.storage()
     
-    storage.child("/Desktop/%s.jpg"%titulo).put("imgCamara/%s.jpg"%titulo)   
+    #storage.child("/Desktop/%s.jpg"%titulo).put("imgCamara/%s.jpg"%titulo)   
     print("%s"% i)
     i=i+1
     sleep(60)
