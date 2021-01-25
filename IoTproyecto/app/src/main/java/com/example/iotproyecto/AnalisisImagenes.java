@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,12 +47,16 @@ public class AnalisisImagenes extends AppCompatActivity {
     private StorageReference tipo;
     StorageReference storageRef;
     StorageReference pictureRef;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
     StorageReference FolderImageProc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_analisis_imagenes);
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("BaseDeDatos");
         FirebaseUser user = mAuth.getCurrentUser();
         user.getUid();
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -130,7 +136,10 @@ public class AnalisisImagenes extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
-        pictureRef = FolderImageProc.child(mAuth.getUid()+"/"+"imagen");
+        pictureRef = FolderImageProc.child(mAuth.getUid()+"/"+data.toString());
+        FirebaseUser user = mAuth.getCurrentUser();
+        user.getUid();
+        myRef.child("ImagenesProcesar").child(user.getUid()).setValue(new ProcImagenes(user.getUid(),data.toString()));
 
         UploadTask uploadTask = pictureRef.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {

@@ -1,0 +1,8 @@
+ apiKey: "AIzaSyAOM_eU6X1MYFw2162jFbulgMo4jWUbzLg",
+    authDomain: "iotproject-9841c.firebaseapp.com",
+    databaseURL: "https://iotproject-9841c-default-rtdb.firebaseio.com",
+    projectId: "iotproject-9841c",
+    storageBucket: "iotproject-9841c.appspot.com",
+    messagingSenderId: "178302614682",
+    appId: "1:178302614682:web:05e900f1a4c57e4f317323",
+    measurementId: "G-3ZLQM1JE1C"
