@@ -13,16 +13,26 @@ config ={
     "appId": "1:178302614682:web:05e900f1a4c57e4f317323",
     "measurementId": "G-3ZLQM1JE1C"
 }
-def stream_handler(message):
+def stream_ProcesarImagenes(message):
     print(message["event"]) # put
     print(message["path"]) # /-K7yGTTEp7O549EzTYtI
     print(message["data"]) # {'title': 'Pyrebase', "body": "etc..."}
-
+    datos= message["data"]
+    print(datos)
+    UID=datos['Usuario']['nameUID']
+    print("usuario "+UID)
+    path=datos['Usuario']['nombre']
+    print("Path "+path)
+    PathCompletoStorage="Procesamiento/"+UID+"/"+path
+    print(PathCompletoStorage)
+    PathRasp="/home/pi/Desktop/IoT/IoTproject/ImagenesProcesar/"+UID+".jpg"
+    storage.child(PathCompletoStorage).download(PathRasp)
 
 
 firebase = pyrebase.initialize_app(config)
 db=firebase.database()
-my_stream = db.child("BaseDeDatos/ImagenesProcesar").stream(stream_handler)
+storage = firebase.storage()
+my_stream = db.child("BaseDeDatos/SolicitudImagenes").stream(stream_ProcesarImagenes)
 
 camera = PiCamera()
 i=0;
