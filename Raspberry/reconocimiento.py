@@ -1,13 +1,14 @@
 import boto3
 
 
+def upload_file(file_name, bucket):  
 client = boto3.client('rekognition')
 response=client.detect_faces(
     Image={
        
         'S3Object': {
-                'Bucket' : 'raspsam',
-                'Name' : 'foto2.jpg'
+                'Bucket' : bucket,
+                'Name' : file_name
                             
             }
         },
