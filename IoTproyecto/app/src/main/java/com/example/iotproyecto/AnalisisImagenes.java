@@ -1,6 +1,7 @@
 package com.example.iotproyecto;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -20,6 +23,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -50,6 +56,8 @@ public class AnalisisImagenes extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference myRef;
     StorageReference FolderImageProc;
+    private TextView letreroRangoEdad,txtRangoEdad,letreroBarba,txtBarba,letreroAnteojos,txtAnteojos,letreroOjosAbiertos,txtOjosAbiertos,letreroGenero,txtGenero,letreroBigote,txtBigote,letreroSonrisa,txtSonrisa,letreroLentesSol,txtLentesSol;
+    private TextView letreroEmocion0,txtEmocion0,letreroEmocion1,txtEmocion1,letreroEmocion2,txtEmocion2,letreroEmocion3,txtEmocion3,letreroEmocion4,txtEmocion4,letreroEmocion5,txtEmocion5,letreroEmocion6,txtEmocion6,letreroEmocion7,txtEmocion7;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_analisis_imagenes);
@@ -60,24 +68,12 @@ public class AnalisisImagenes extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         user.getUid();
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
-       //  Nusuario = storageRef.child(mAuth.getUid());//nulo
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         tipo = storageRef.child("Procesamiento");
-
         FolderImageProc = storageRef.child("Procesamiento");
-
-// Child references can also take paths
-// spaceRef now points to "images/space.jpg
-// imagesRef still points to "images"
-
-
-
-
         avatar=(ImageButton)  findViewById(R.id.avataranalisis);
         btnImagen=(Button)  findViewById(R.id.btnimagen);
-
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +89,74 @@ public class AnalisisImagenes extends AppCompatActivity {
                 GuardarFoto();
             }
         });
+        //declaraciones  Edit Text
+        letreroRangoEdad=(TextView) findViewById(R.id.letreroRangoEdad);
+                txtRangoEdad=(TextView) findViewById(R.id.txtRangoEdad);
+        letreroBarba=(TextView) findViewById(R.id.letreroBarba);
+                txtBarba=(TextView) findViewById(R.id.txtBarba);
+        letreroAnteojos=(TextView) findViewById(R.id.letreroAnteojos);
+                txtAnteojos=(TextView) findViewById(R.id.txtAnteojos);
+        letreroOjosAbiertos=(TextView) findViewById(R.id.letreroOjosAbiertos);
+                txtOjosAbiertos=(TextView) findViewById(R.id.txtOjosAbiertos);
+        letreroGenero=(TextView) findViewById(R.id.letreroGenero);
+                txtGenero=(TextView) findViewById(R.id.txtGenero);
+        letreroBigote=(TextView) findViewById(R.id.letreroBigote);
+                txtBigote=(TextView) findViewById(R.id.txtBigote);
+        letreroSonrisa=(TextView) findViewById(R.id.letreroSonrisa);
+                txtSonrisa=(TextView) findViewById(R.id.txtSonrisa);
+        letreroLentesSol=(TextView) findViewById(R.id.letreroLentesSol);
+                txtLentesSol=(TextView) findViewById(R.id.txtLentesSol);
+        letreroEmocion0=(TextView) findViewById(R.id.letreroEmocion0);
+                txtEmocion0=(TextView) findViewById(R.id.txtEmocion0);
+        letreroEmocion1=(TextView) findViewById(R.id.letreroEmocion1);
+                txtEmocion1=(TextView) findViewById(R.id.txtEmocion1);
+        letreroEmocion2=(TextView) findViewById(R.id.letreroEmocion2);
+                txtEmocion2=(TextView) findViewById(R.id.txtEmocion2);
+        letreroEmocion3=(TextView) findViewById(R.id.letreroEmocion3);
+                txtEmocion3=(TextView) findViewById(R.id.txtEmocion3);
+        letreroEmocion4=(TextView) findViewById(R.id.letreroEmocion4);
+                txtEmocion4=(TextView) findViewById(R.id.txtEmocion4);
+        letreroEmocion5=(TextView) findViewById(R.id.letreroEmocion5);
+                txtEmocion5=(TextView) findViewById(R.id.txtEmocion5);
+        letreroEmocion6=(TextView) findViewById(R.id.letreroEmocion6);
+                txtEmocion6=(TextView) findViewById(R.id.txtEmocion6);
+        letreroEmocion7=(TextView) findViewById(R.id.letreroEmocion7);
+                txtEmocion7=(TextView) findViewById(R.id.txtEmocion7);
+
+
+                //Si se ha recibido algo en la bdd
+        myRef = database.getReference("RespuestaAnalisis");
+
+        myRef.child(user.getUid()).child("0").addChildEventListener(new ChildEventListener() {
+
+
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                obtenerRespuestaFirebase(snapshot,previousChildName);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                obtenerRespuestaFirebase(snapshot,previousChildName);
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
     }
     public void abrirGaleria(View v){
@@ -136,10 +200,10 @@ public class AnalisisImagenes extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
-        pictureRef = FolderImageProc.child(mAuth.getUid()+"/"+data.toString());
+        pictureRef = FolderImageProc.child(mAuth.getUid()+"/"+"Imagen");
         FirebaseUser user = mAuth.getCurrentUser();
         user.getUid();
-        myRef.child("ImagenesProcesar").child(user.getUid()).setValue(new ProcImagenes(user.getUid(),data.toString()));
+        myRef.child("SolicitudImagenes").child("Usuario").setValue(new ProcImagenes(user.getUid(),"Imagen",data.toString()));
 
         UploadTask uploadTask = pictureRef.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -161,5 +225,224 @@ public class AnalisisImagenes extends AppCompatActivity {
         });
 
 
+    }
+
+    public void obtenerRespuestaFirebase(@NonNull DataSnapshot snapshot, @Nullable String previousChildName){
+        Log.d("snapPadre", String.valueOf(snapshot.getKey()));// dice la etiqueta, por ejemplo Age Range
+        for (DataSnapshot child: snapshot.getChildren()) {//regresa ya las respuestas
+
+
+          if(snapshot.getKey().equals("Emotions")) {//emociones
+                   switch (child.getKey()){
+                        case "0":
+                            for (DataSnapshot child2: child.getChildren()) {
+                                if (child2.getKey().equals("Type")){
+                                    letreroEmocion0.setText(" "+child2.getValue());
+                                }
+                                if (child2.getKey().equals("Confidence")){
+                                    txtEmocion0.setText(" "+child2.getValue()+"%");
+                                }
+                            }
+                            break;
+                        case "1":
+                            for (DataSnapshot child2: child.getChildren()) {
+                                if (child2.getKey().equals("Type")){
+                                    letreroEmocion1.setText(" "+child2.getValue());
+                                }
+                                if (child2.getKey().equals("Confidence")){
+                                    txtEmocion1.setText(" "+child2.getValue()+"%");
+                                }
+                            }
+                            break;
+                        case "2":
+                            for (DataSnapshot child2: child.getChildren()) {
+                                if (child2.getKey().equals("Type")){
+                                    letreroEmocion2.setText(" "+child2.getValue());
+                                }
+                                if (child2.getKey().equals("Confidence")){
+                                    txtEmocion2.setText(" "+child2.getValue()+"%");
+                                }
+                            }
+                            break;
+                        case "3":
+                            for (DataSnapshot child2: child.getChildren()) {
+                                if (child2.getKey().equals("Type")){
+                                    letreroEmocion3.setText(" "+child2.getValue());
+                                }
+                                if (child2.getKey().equals("Confidence")){
+                                    txtEmocion3.setText(" "+child2.getValue()+"%");
+                                }
+                            }
+                            break;
+                        case "4":
+                            for (DataSnapshot child2: child.getChildren()) {
+                                if (child2.getKey().equals("Type")){
+                                    letreroEmocion4.setText(" "+child2.getValue());
+                                }
+                                if (child2.getKey().equals("Confidence")){
+                                    txtEmocion4.setText(" "+child2.getValue()+"%");
+                                }
+                            }
+                            break;
+                        case "5":
+                            for (DataSnapshot child2: child.getChildren()) {
+                            if (child2.getKey().equals("Type")){
+                                letreroEmocion5.setText(" "+child2.getValue());
+                            }
+                            if (child2.getKey().equals("Confidence")){
+                                txtEmocion5.setText(" "+child2.getValue()+"%");
+                            }
+                        }
+
+                            break;
+                        case "6":
+                            for (DataSnapshot child2: child.getChildren()) {
+                                if (child2.getKey().equals("Type")){
+                                    letreroEmocion6.setText(" "+child2.getValue());
+                                }
+                                if (child2.getKey().equals("Confidence")){
+                                    txtEmocion6.setText(" "+child2.getValue()+"%");
+                                }
+                            }
+                            break;
+                        case "7":
+                            for (DataSnapshot child2: child.getChildren()) {
+                                if (child2.getKey().equals("Type")){
+                                    letreroEmocion7.setText(" "+child2.getValue());
+                                }
+                                if (child2.getKey().equals("Confidence")){
+                                    txtEmocion7.setText(" "+child2.getValue()+"%");
+                                }
+                            }
+                                break;
+
+
+
+                }
+            }else{
+                String padre=snapshot.getKey();
+              Log.d("snapValue", String.valueOf(child.getValue()));// dice la etiqueta, por ejemplo Age Range
+              Log.d("snapKey", String.valueOf(child.getKey()));// dice la etiqueta, por ejemplo Age Range
+
+              switch (padre) {
+                    case "AgeRange":
+                        letreroRangoEdad.setText("Su edad parece estar entre");
+                        if (child.getKey().equals("High")){
+                            txtRangoEdad.setText(String.valueOf(child.getValue()));
+                        }
+                        if (child.getKey().equals("Low")){
+                            txtRangoEdad.setText(txtRangoEdad.getText()+" y "+String.valueOf(child.getValue()));
+                        }
+                        break;
+                    case "Beard":
+                        if (child.getKey().equals("Value")){
+                            if (String.valueOf(child.getValue()).equals("true")){
+                            letreroBarba.setText("Parece ser barbon");
+                            }
+                            if (String.valueOf(child.getValue()).equals("false")){
+                                letreroBarba.setText("Parece no tener Barba");
+                            }
+                        }
+                        if (child.getKey().equals("Confidence")){
+                            txtBarba.setText(" Fiabilidad del "+child.getValue());
+                        }
+                        break;
+                    case "Eyeglasses":
+                        Log.d("snapRes", "AAAnteojos");// dice la etiqueta, por ejemplo Age Range
+
+                        if (child.getKey().equals("Value")){
+                            Log.d("snapResValueProb", String.valueOf(child.getValue()));// dice la etiqueta, por ejemplo Age Range
+
+                            if (String.valueOf(child.getValue()).equals("true")){   Log.d("snapRes", "No anteojos");// dice la etiqueta, por ejemplo Age Range
+
+                                letreroAnteojos.setText("Parece usar anteojos");
+
+                            }
+                            if (String.valueOf(child.getValue()).equals("false")){
+                                Log.d("snapRes", "Sí anteojos");// dice la etiqueta, por ejemplo Age Range
+
+                                letreroAnteojos.setText("Parece no usar anteojos");
+
+
+                            }
+                        }
+                        if (child.getKey().equals("Confidence")){
+                            txtAnteojos.setText(" Fiabilidad del "+child.getValue());
+                        }
+                        break;
+                    case "EyesOpen":
+                        if (child.getKey().equals("Value")){
+                            if (child.getValue().equals("True")){
+                                letreroOjosAbiertos.setText("Parece tener los ojos abiertos");
+                            }
+                            if (child.getValue().equals("False")){
+                                letreroOjosAbiertos.setText("Parece no tener los ojos abiertos");
+                            }
+                        }
+                        if (child.getKey().equals("Confidence")){
+                            txtOjosAbiertos.setText(" Fiabilidad del "+child.getValue());
+                        }
+                        break;
+                    case "Gender":
+                        if (child.getKey().equals("Value")){
+                            if (child.getValue().equals("Male")){
+                                letreroGenero.setText("Parece ser Hombre");
+                            }
+                            if (child.getValue().equals("Female")){
+                                letreroGenero.setText("Parece ser Mujer");
+                            }
+                        }
+                        if (child.getKey().equals("Confidence")){
+                            txtGenero.setText(" Fiabilidad del "+child.getValue());
+                        }
+                        break;
+                    case "MouthOpen":
+
+                        //falta
+                        break;
+                    case "Mustache":
+                        if (child.getKey().equals("Value")){
+                            if (child.getValue().equals("tTrue")){
+                                letreroBigote.setText("Parece tener bigote");
+                            }
+                            if (child.getValue().equals("False")){
+                                letreroBigote.setText("Parece no tener bigote");
+                            }
+                        }
+                        if (child.getKey().equals("Confidence")){
+                            txtBigote.setText(" Fiabilidad del "+child.getValue());
+                        }
+                            break;
+                    case "Smile":
+                        if (child.getKey().equals("Value")){
+                            if (child.getValue().equals("true")){
+                                letreroSonrisa.setText("Parece estar sonriendo");
+                            }
+                            if (child.getValue().equals("false")){
+                                letreroSonrisa.setText("Parece no estar sonriendo");
+                            }
+                        }
+                        if (child.getKey().equals("Confidence")){
+                            txtSonrisa.setText(" Fiabilidad del "+child.getValue());
+                        }
+                        break;
+                    case "Sunglasses":
+                        if (child.getKey().equals("Value")){
+                            if (child.getValue().equals("true")){
+                                letreroLentesSol.setText("Parece no tener lentes de sol");
+                            }
+                            if (child.getValue().equals("false")){
+                                letreroLentesSol.setText("Parece no tener lentes de sol");
+                            }
+                        }
+                        if (child.getKey().equals("Confidence")){
+                            txtBigote.setText(" Fiabilidad del "+child.getValue());
+                        }
+                        break;
+                }
+
+
+            }
+        }
     }
 }
