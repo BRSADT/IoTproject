@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.CaseMap;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -237,60 +238,72 @@ public class AnalisisImagenes extends AppCompatActivity {
                         case "0":
                             for (DataSnapshot child2: child.getChildren()) {
                                 if (child2.getKey().equals("Type")){
-                                    letreroEmocion0.setText(" "+child2.getValue());
+                                    letreroEmocion0.setText("  "+child2.getValue());
                                 }
                                 if (child2.getKey().equals("Confidence")){
-                                    txtEmocion0.setText(" "+child2.getValue()+"%");
+                                    String percent=child2.getValue().toString();
+                                    percent=percent.substring(0,3);
+                                    txtEmocion0.setText(" "+percent+"%");
                                 }
                             }
                             break;
                         case "1":
                             for (DataSnapshot child2: child.getChildren()) {
                                 if (child2.getKey().equals("Type")){
-                                    letreroEmocion1.setText(" "+child2.getValue());
+                                    letreroEmocion1.setText("  "+child2.getValue());
                                 }
                                 if (child2.getKey().equals("Confidence")){
-                                    txtEmocion1.setText(" "+child2.getValue()+"%");
+                                    String percent=child2.getValue().toString();
+                                    percent=percent.substring(0,3);
+                                    txtEmocion1.setText(" "+percent+"%");
                                 }
                             }
                             break;
                         case "2":
                             for (DataSnapshot child2: child.getChildren()) {
                                 if (child2.getKey().equals("Type")){
-                                    letreroEmocion2.setText(" "+child2.getValue());
+                                    letreroEmocion2.setText("  "+child2.getValue());
                                 }
                                 if (child2.getKey().equals("Confidence")){
-                                    txtEmocion2.setText(" "+child2.getValue()+"%");
+                                    String percent=child2.getValue().toString();
+                                    percent=percent.substring(0,3);
+                                    txtEmocion2.setText(" "+percent.substring(0,3)+"%");
                                 }
                             }
                             break;
                         case "3":
                             for (DataSnapshot child2: child.getChildren()) {
                                 if (child2.getKey().equals("Type")){
-                                    letreroEmocion3.setText(" "+child2.getValue());
+                                    letreroEmocion3.setText("  "+child2.getValue());
                                 }
                                 if (child2.getKey().equals("Confidence")){
-                                    txtEmocion3.setText(" "+child2.getValue()+"%");
+                                    String percent=child2.getValue().toString();
+                                    percent=percent.substring(0,3);
+                                    txtEmocion3.setText(" "+percent.substring(0,3)+"%");
                                 }
                             }
                             break;
                         case "4":
                             for (DataSnapshot child2: child.getChildren()) {
                                 if (child2.getKey().equals("Type")){
-                                    letreroEmocion4.setText(" "+child2.getValue());
+                                    letreroEmocion4.setText("  "+child2.getValue());
                                 }
                                 if (child2.getKey().equals("Confidence")){
-                                    txtEmocion4.setText(" "+child2.getValue()+"%");
+                                    String percent=child2.getValue().toString();
+                                    percent=percent.substring(0,3);
+                                    txtEmocion4.setText(" "+percent+"%");
                                 }
                             }
                             break;
                         case "5":
                             for (DataSnapshot child2: child.getChildren()) {
                             if (child2.getKey().equals("Type")){
-                                letreroEmocion5.setText(" "+child2.getValue());
+                                letreroEmocion5.setText("  "+child2.getValue());
                             }
                             if (child2.getKey().equals("Confidence")){
-                                txtEmocion5.setText(" "+child2.getValue()+"%");
+                                String percent=child2.getValue().toString();
+                                percent=percent.substring(0,3);
+                                txtEmocion5.setText(" "+percent+"%");
                             }
                         }
 
@@ -298,20 +311,24 @@ public class AnalisisImagenes extends AppCompatActivity {
                         case "6":
                             for (DataSnapshot child2: child.getChildren()) {
                                 if (child2.getKey().equals("Type")){
-                                    letreroEmocion6.setText(" "+child2.getValue());
+                                    letreroEmocion6.setText("  "+child2.getValue());
                                 }
                                 if (child2.getKey().equals("Confidence")){
-                                    txtEmocion6.setText(" "+child2.getValue()+"%");
+                                    String percent=child2.getValue().toString();
+                                    percent=percent.substring(0,3);
+                                    txtEmocion6.setText(" "+percent+"%");
                                 }
                             }
                             break;
                         case "7":
                             for (DataSnapshot child2: child.getChildren()) {
                                 if (child2.getKey().equals("Type")){
-                                    letreroEmocion7.setText(" "+child2.getValue());
+                                    letreroEmocion7.setText("  "+child2.getValue());
                                 }
                                 if (child2.getKey().equals("Confidence")){
-                                    txtEmocion7.setText(" "+child2.getValue()+"%");
+                                    String percent=child2.getValue().toString();
+                                    percent=percent.substring(0,3);
+                                    txtEmocion7.setText(" "+percent+"%");
                                 }
                             }
                                 break;
@@ -326,7 +343,7 @@ public class AnalisisImagenes extends AppCompatActivity {
 
               switch (padre) {
                     case "AgeRange":
-                        letreroRangoEdad.setText("Su edad parece estar entre");
+                        letreroRangoEdad.setText("  Su edad parece estar entre");
                         if (child.getKey().equals("High")){
                             txtRangoEdad.setText(String.valueOf(child.getValue()));
                         }
@@ -337,63 +354,72 @@ public class AnalisisImagenes extends AppCompatActivity {
                     case "Beard":
                         if (child.getKey().equals("Value")){
                             if (String.valueOf(child.getValue()).equals("true")){
-                            letreroBarba.setText("Parece ser barbon");
+                            letreroBarba.setText("  Parece ser barbon");
                             }
                             if (String.valueOf(child.getValue()).equals("false")){
-                                letreroBarba.setText("Parece no tener Barba");
+                                letreroBarba.setText("  Parece no tener Barba");
                             }
                         }
                         if (child.getKey().equals("Confidence")){
-                            txtBarba.setText(" Fiabilidad del "+child.getValue());
+                            String percent=child.getValue().toString();
+                            percent=percent.substring(0,4);
+                            txtBarba.setText("  "+percent+"%");
                         }
                         break;
                     case "Eyeglasses":
                         Log.d("snapRes", "AAAnteojos");// dice la etiqueta, por ejemplo Age Range
 
-                        if (child.getKey().equals("Value")){
+
                             Log.d("snapResValueProb", String.valueOf(child.getValue()));// dice la etiqueta, por ejemplo Age Range
 
-                            if (String.valueOf(child.getValue()).equals("true")){   Log.d("snapRes", "No anteojos");// dice la etiqueta, por ejemplo Age Range
+                            if (String.valueOf(child.getValue()).equals("true")){
+                                Log.d("snapRes", "No anteojos");// dice la etiqueta, por ejemplo Age Range
 
-                                letreroAnteojos.setText("Parece usar anteojos");
+                                letreroAnteojos.setText("  Parece usar anteojos");
 
                             }
                             if (String.valueOf(child.getValue()).equals("false")){
                                 Log.d("snapRes", "Sí anteojos");// dice la etiqueta, por ejemplo Age Range
 
-                                letreroAnteojos.setText("Parece no usar anteojos");
+                                letreroAnteojos.setText("  Parece no usar anteojos");
 
 
                             }
-                        }
+
                         if (child.getKey().equals("Confidence")){
-                            txtAnteojos.setText(" Fiabilidad del "+child.getValue());
+                            String percent=child.getValue().toString();
+
+                            txtAnteojos.setText("  "+percent.substring(0,4)+"%");
                         }
                         break;
                     case "EyesOpen":
                         if (child.getKey().equals("Value")){
-                            if (child.getValue().equals("True")){
-                                letreroOjosAbiertos.setText("Parece tener los ojos abiertos");
+                            if (String.valueOf(child.getValue()).equals("true")){
+                                letreroOjosAbiertos.setText("  Parece tener los ojos abiertos");
                             }
-                            if (child.getValue().equals("False")){
-                                letreroOjosAbiertos.setText("Parece no tener los ojos abiertos");
+                            if (String.valueOf(child.getValue()).equals("false")){
+                                letreroOjosAbiertos.setText("  Parece no tener los ojos abiertos");
                             }
                         }
                         if (child.getKey().equals("Confidence")){
-                            txtOjosAbiertos.setText(" Fiabilidad del "+child.getValue());
+                            String percent=child.getValue().toString();
+
+                            txtOjosAbiertos.setText("  "+percent.substring(0,4)+"%");
                         }
                         break;
                     case "Gender":
                         if (child.getKey().equals("Value")){
                             if (child.getValue().equals("Male")){
-                                letreroGenero.setText("Parece ser Hombre");
+                                letreroGenero.setText("  Parece ser Hombre");
                             }
                             if (child.getValue().equals("Female")){
-                                letreroGenero.setText("Parece ser Mujer");
+                                letreroGenero.setText("  Parece ser Mujer");
                             }
                         }
                         if (child.getKey().equals("Confidence")){
-                            txtGenero.setText(" Fiabilidad del "+child.getValue());
+                            String percent=child.getValue().toString();
+
+                            txtGenero.setText("  "+percent.substring(0,4)+"%");
                         }
                         break;
                     case "MouthOpen":
@@ -402,41 +428,47 @@ public class AnalisisImagenes extends AppCompatActivity {
                         break;
                     case "Mustache":
                         if (child.getKey().equals("Value")){
-                            if (child.getValue().equals("tTrue")){
-                                letreroBigote.setText("Parece tener bigote");
+                            if (String.valueOf(child.getValue()).equals("true")){
+                                letreroBigote.setText("  Parece tener bigote");
                             }
-                            if (child.getValue().equals("False")){
-                                letreroBigote.setText("Parece no tener bigote");
+                            if (String.valueOf(child.getValue()).equals("false")){
+                                letreroBigote.setText("  Parece no tener bigote");
                             }
                         }
                         if (child.getKey().equals("Confidence")){
-                            txtBigote.setText(" Fiabilidad del "+child.getValue());
+                            String percent=child.getValue().toString();
+
+                            txtBigote.setText("  "+percent.substring(0,4)+"%");
                         }
                             break;
                     case "Smile":
                         if (child.getKey().equals("Value")){
-                            if (child.getValue().equals("true")){
-                                letreroSonrisa.setText("Parece estar sonriendo");
+                            if (String.valueOf(child.getValue()).equals("true")){
+                                letreroSonrisa.setText("  Parece estar sonriendo");
                             }
-                            if (child.getValue().equals("false")){
-                                letreroSonrisa.setText("Parece no estar sonriendo");
+                            if (String.valueOf(child.getValue()).equals("false")){
+                                letreroSonrisa.setText("  Parece no estar sonriendo");
                             }
                         }
                         if (child.getKey().equals("Confidence")){
-                            txtSonrisa.setText(" Fiabilidad del "+child.getValue());
+                            String percent=child.getValue().toString();
+
+                            txtSonrisa.setText("  "+percent.substring(0,4)+"%");
                         }
                         break;
                     case "Sunglasses":
                         if (child.getKey().equals("Value")){
-                            if (child.getValue().equals("true")){
-                                letreroLentesSol.setText("Parece no tener lentes de sol");
+                            if (String.valueOf(child.getValue()).equals("true")){
+                                letreroLentesSol.setText("  Parece no tener lentes de sol");
                             }
-                            if (child.getValue().equals("false")){
-                                letreroLentesSol.setText("Parece no tener lentes de sol");
+                            if (String.valueOf(child.getValue()).equals("false")){
+                                letreroLentesSol.setText("  Parece no tener lentes de sol");
                             }
                         }
                         if (child.getKey().equals("Confidence")){
-                            txtBigote.setText(" Fiabilidad del "+child.getValue());
+                            String percent=child.getValue().toString();
+
+                            txtLentesSol.setText("  "+percent.substring(0,4)+"%");
                         }
                         break;
                 }
