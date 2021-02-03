@@ -76,7 +76,7 @@
                     android:orientation="vertical">
 
                     <Switch
-                        android:id="@+id/switch1"
+                        android:id="@+id/modoAlerta"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -96,7 +96,7 @@
                             android:text="ingresar cada cuantos segundos registrara una lecturas de los sensores y camara" />
 
                         <EditText
-                            android:id="@+id/editTextTextPersonName"
+                            android:id="@+id/inputSegundos"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -133,13 +133,14 @@
                                 android:orientation="horizontal"></LinearLayout>
 
                             <EditText
-                                android:id="@+id/editTextTextPersonName2"
+                                android:id="@+id/inputNombre"
                                 android:layout_width="match_parent"
                                 android:layout_height="0dp"
                                 android:layout_weight="1"
                                 android:ems="10"
-                                android:inputType="textPersonName"
-                                android:text="Nombre" />
+                                android:gravity="center"
+                                android:hint="Nombre"
+                                android:inputType="textPersonName" />
 
                             <TextView
                                 android:id="@+id/textView17"
@@ -187,7 +188,7 @@
                         </LinearLayout>
 
                         <Button
-                            android:id="@+id/button"
+                            android:id="@+id/btnEnviar"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"

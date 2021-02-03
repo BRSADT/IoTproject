@@ -58,7 +58,7 @@ public class Menu extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        notificationManager = NotificationManagerCompat.from(this);
+        notificationManager = NotificationManagerCompat.from(this);  //resolver que solo se ejecute una vez
         startService(new Intent(Menu.this, Servicio.class));
 
     }

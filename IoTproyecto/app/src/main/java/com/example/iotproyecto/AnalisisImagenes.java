@@ -41,8 +41,7 @@ import java.io.InputStream;
 public class AnalisisImagenes extends AppCompatActivity {
     ImageButton avatar;
 
-    private FirebaseAuth mAuth;
-    FirebaseStorage storage = FirebaseStorage.getInstance();
+
     private static final int SELECT_FILE = 1;
     private static final int REQUEST_CODE = 1;
     private static final int READ_REQUEST_CODE = 42;
@@ -51,7 +50,9 @@ public class AnalisisImagenes extends AppCompatActivity {
     private ImageView imageView;
     private Button btnImagen;
     private StorageReference Nusuario;
-    private StorageReference tipo;
+
+    private FirebaseAuth mAuth;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef;
     StorageReference pictureRef;
     FirebaseDatabase database;
@@ -69,10 +70,7 @@ public class AnalisisImagenes extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         user.getUid();
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
-        tipo = storageRef.child("Procesamiento");
-        FolderImageProc = storageRef.child("Procesamiento");
+
         avatar=(ImageButton)  findViewById(R.id.avataranalisis);
         btnImagen=(Button)  findViewById(R.id.btnimagen);
         avatar.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +83,7 @@ public class AnalisisImagenes extends AppCompatActivity {
 
         btnImagen.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) { //Procesar imagen
 
                 GuardarFoto();
             }
@@ -197,6 +195,10 @@ public class AnalisisImagenes extends AppCompatActivity {
     }
 
     public void GuardarFoto(){
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+         FolderImageProc = storageRef.child("Procesamiento");
+
         Log.i("Response", "Success");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);

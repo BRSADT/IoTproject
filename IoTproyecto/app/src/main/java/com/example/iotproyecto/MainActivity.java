@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +30,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity {
@@ -71,15 +75,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         btnAcceder = (Button) findViewById(R.id.btnAcceder);
         btnAcceder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 IniciarSesion();
-               // Intent i = new Intent(MainActivity.this, Menu.class);
-               // startActivity(i);
+                // Intent i = new Intent(MainActivity.this, Menu.class);
+                // startActivity(i);
             }
         });
 
@@ -92,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.d("GoogleSignIn", "firebaseAuthWithGoogle:" + account.getId()+"holi"+account.getEmail()+account.getIdToken());
+                Log.d("GoogleSignIn", "firebaseAuthWithGoogle:" + account.getId() + "holi" + account.getEmail() + account.getIdToken());
 
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public  void IniciarSesion(){
+    public void IniciarSesion() {
 
         mAuth.signInWithEmailAndPassword(inputMail.getText().toString(), inputPass.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -156,25 +160,23 @@ public class MainActivity extends AppCompatActivity {
 
                             user.getUid();
 
-                            myRef.child("Usuarios").child(user.getUid()).setValue(new Usuario(user.getDisplayName(),user.getEmail()))
+                            myRef.child("Usuarios").child(user.getUid()).setValue(new Usuario(user.getDisplayName(), user.getEmail()))
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             // Write was successful!
                                             // ...
                                             Toast.makeText(MainActivity.this, "Registrado en BDD", Toast.LENGTH_SHORT).show();
-                                            Log.i("Response",  "Registrado en BDD");
+                                            Log.i("Response", "Registrado en BDD");
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             Toast.makeText(MainActivity.this, "Error en bdd", Toast.LENGTH_SHORT).show();
-                                            Log.i("Response",  "Error en bdd");
+                                            Log.i("Response", "Error en bdd");
                                         }
                                     });
-
-
 
 
                             Intent i = new Intent(MainActivity.this, Menu.class);
@@ -190,4 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+
 }
+
+
