@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.CaseMap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class AnalisisImagenes extends AppCompatActivity {
-    ImageButton avatar;
+    ImageView avatar;
 
 
     private static final int SELECT_FILE = 1;
@@ -71,7 +73,40 @@ public class AnalisisImagenes extends AppCompatActivity {
         user.getUid();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        avatar=(ImageButton)  findViewById(R.id.avataranalisis);
+        avatar=(ImageView)  findViewById(R.id.avataranalisis);
+      //  Glide.with(this).load("http://goo.gl/gEgYUd").into(avatar);
+        // WORKING CODE!
+        //val storage = FirebaseStorage.getInstance()
+// Create a reference to a file from a Google Cloud Storage URI
+      //  val gsReference = storage.getReferenceFromUrl("gs://bucket/images/stars.jpg")
+
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+        FolderImageProc = storageRef.child("Procesamiento");
+        pictureRef = FolderImageProc.child(mAuth.getUid()+"/"+"Imagen");
+
+   //     storageRef = storage.getReferenceFromUrl(pictureRef.getDownloadUrl().toString());
+//        storageRef = storage.getReferenceFromUrl("gs://bucket/images/stars.jpg");
+
+        //storageRef = storage.getReferenceFromUrl("gs://iotproject-9841c.appspot.com/Procesamiento/2PRU3spGgcg8S4AMJl96NQCWpAH3/Imagen");
+
+        pictureRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+                final String downloadUrl =
+                        uri.toString();
+
+                Glide.with(AnalisisImagenes.this)
+                        .load(uri)
+                        .into(avatar);
+            }
+        });
+
+
+
+
+
         btnImagen=(Button)  findViewById(R.id.btnimagen);
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -356,7 +391,7 @@ public class AnalisisImagenes extends AppCompatActivity {
                     case "Beard":
                         if (child.getKey().equals("Value")){
                             if (String.valueOf(child.getValue()).equals("true")){
-                            letreroBarba.setText("  Parece ser barbon");
+                            letreroBarba.setText("  Parece tener barba");
                             }
                             if (String.valueOf(child.getValue()).equals("false")){
                                 letreroBarba.setText("  Parece no tener Barba");
