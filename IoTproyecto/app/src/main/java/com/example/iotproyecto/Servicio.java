@@ -82,11 +82,13 @@ public class Servicio  extends Service {
 
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.i("Servicio", "Cambio");
                 Alertas(snapshot);
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.i("Servicio", "Cambio");
                 Alertas(snapshot);
 
             }
@@ -115,11 +117,20 @@ public class Servicio  extends Service {
     }
 
     public void Alertas(@NonNull DataSnapshot snapshot){
+        Log.i("Servicio1", snapshot.getValue().toString());
+
        if (control!=0) {
-           sendOnChannel1();
-           Log.d("snapPadre", String.valueOf(snapshot.getKey()));// dice la etiqueta, por ejemplo Alerta
-           for (DataSnapshot child : snapshot.getChildren()) {//regresa ya las respuestas
-               Log.d("snapPadre", String.valueOf(snapshot.getKey()));
+           Log.i("Servicio2", snapshot.getValue().toString());
+           switch (snapshot.getValue().toString()){
+               case "Llama":
+                   sendOnChannel1();
+                   break;
+               case "Movimiento":
+                   sendOnChannel3();
+                   break;
+               case "Luvia":
+                   sendOnChannel2();
+                   break;
            }
        }else{
            control=1;
@@ -128,8 +139,8 @@ public class Servicio  extends Service {
     }
 
     public void sendOnChannel1() { //NOTIFICATION 1
-        String title = "AAHHHHH";
-        String message = "El cielo se cae y tú casa se quema";
+        String title = "Fuego";
+        String message = "Se ha detectado fuego";
 
         Notification notification = new NotificationCompat.Builder(Servicio.this, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.camara)
@@ -143,8 +154,8 @@ public class Servicio  extends Service {
 
 
     public void sendOnChannel2() {  //NOTIFICATION 2
-        String title = "Han entrado";
-        String message = "Alguien ha entrado a tu casa";
+        String title = "Lluvia";
+        String message = "Corre y mete la ropa";
         Notification notification = new NotificationCompat.Builder(Servicio.this, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.camara)
                 .setContentTitle(title)
@@ -157,8 +168,8 @@ public class Servicio  extends Service {
 
 
     public void sendOnChannel3() { //NOTIFICATION 3
-        String title = "Han salido";
-        String message = "Una persona ha salido de tú casa";
+        String title = "Movimiento";
+        String message = "Se ha detectado movimiento";
 
         Notification notification = new NotificationCompat.Builder(Servicio.this, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.camara)

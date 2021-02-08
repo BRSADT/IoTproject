@@ -58,7 +58,7 @@ public class AnalisisImagenes extends AppCompatActivity {
     StorageReference storageRef;
     StorageReference pictureRef;
     FirebaseDatabase database;
-    DatabaseReference myRef;
+    DatabaseReference myRef,myRefAnalisis;
     StorageReference FolderImageProc;
     private TextView letreroRangoEdad,txtRangoEdad,letreroBarba,txtBarba,letreroAnteojos,txtAnteojos,letreroOjosAbiertos,txtOjosAbiertos,letreroGenero,txtGenero,letreroBigote,txtBigote,letreroSonrisa,txtSonrisa,letreroLentesSol,txtLentesSol;
     private TextView letreroEmocion0,txtEmocion0,letreroEmocion1,txtEmocion1,letreroEmocion2,txtEmocion2,letreroEmocion3,txtEmocion3,letreroEmocion4,txtEmocion4,letreroEmocion5,txtEmocion5,letreroEmocion6,txtEmocion6,letreroEmocion7,txtEmocion7;
@@ -159,9 +159,11 @@ public class AnalisisImagenes extends AppCompatActivity {
 
 
                 //Si se ha recibido algo en la bdd
-        myRef = database.getReference("RespuestaAnalisis");
+        myRef = database.getReference("BaseDeDatos");
 
-        myRef.child(user.getUid()).child("0").addChildEventListener(new ChildEventListener() {
+        myRefAnalisis = database.getReference("RespuestaAnalisis");
+
+        myRefAnalisis.child(user.getUid()).child("0").addChildEventListener(new ChildEventListener() {
 
 
             @Override

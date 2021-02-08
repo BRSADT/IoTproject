@@ -34,7 +34,7 @@ import java.io.InputStream;
 public class ConfiguracionSensores extends AppCompatActivity {
 
 
-    Switch modoAlerta;
+    Switch modoAlerta,Alertallama,AlertaLLuvia;
     EditText inputSegundos, inputNombre;
     Button btnEnviar;
     ImageButton imageButton;
@@ -59,6 +59,8 @@ public class ConfiguracionSensores extends AppCompatActivity {
         inputSegundos = (EditText) findViewById(R.id.inputSegundos);
         inputNombre = (EditText) findViewById(R.id.inputNombre);
         modoAlerta = (Switch) findViewById(R.id.modoAlerta);
+        Alertallama = (Switch) findViewById(R.id.Alertallama);
+        AlertaLLuvia = (Switch) findViewById(R.id.AlertaLLuvia);
         imageButton = (ImageButton) findViewById(R.id.imageButton);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -141,27 +143,29 @@ public class ConfiguracionSensores extends AppCompatActivity {
     }
 
     public void subirDatos(boolean Foto) {
-        Boolean switchBool=modoAlerta.isChecked();
+
+        String Slluvia,Sllama,SmodoAlerta;
+
+        Slluvia = AlertaLLuvia.isChecked() == true ? "true" : "false";
+        Sllama = Alertallama.isChecked() == true ? "true" : "false";
+        SmodoAlerta = modoAlerta.isChecked() == true ? "true" : "false";
         if (Foto) {
             storage = FirebaseStorage.getInstance();
             storageRef = storage.getReference();
             FolderImageProc = storageRef.child("PersonasReconocidas");
 
 
-            FirebaseUser user = mAuth.getCurrentUser();
-            user.getUid();
-            if (switchBool) {
-                myRef.child("CambioSensoresFoto").child("Usuario").setValue(new ConfigSensores(inputNombre.getText().toString(),"true",inputSegundos.getText().toString(),user.getUid()));
-            }else{
-                myRef.child("CambioSensoresFoto").child("Usuario").setValue(new ConfigSensores("false",inputSegundos.getText().toString()));
-
-            }
             Log.i("Response", "Success");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
             pictureRef = FolderImageProc.child(mAuth.getUid() + "/" + inputNombre.getText().toString()); //subir foto
 
+
+            FirebaseUser user = mAuth.getCurrentUser();
+            user.getUid();
+
+            myRef.child("CambioSensoresFoto").child("Usuario").setValue(new ConfigSensores(inputNombre.getText().toString(),SmodoAlerta,inputSegundos.getText().toString(),user.getUid(),data.toString(),Sllama,Slluvia));
 
 
             UploadTask uploadTask = pictureRef.putBytes(data);
@@ -185,13 +189,10 @@ public class ConfiguracionSensores extends AppCompatActivity {
 
         } else {
 
-            if (switchBool) {
-                myRef.child("CambioSensores").child("Usuario").setValue(new ConfigSensores("true",inputSegundos.getText().toString()));
-            }else{
-                myRef.child("CambioSensores").child("Usuario").setValue(new ConfigSensores("false",inputSegundos.getText().toString()));
 
-            }
+                myRef.child("CambioSensores").child("Usuario").setValue(new ConfigSensores(SmodoAlerta,inputSegundos.getText().toString(),Sllama,Slluvia));
 
+            Log.i("Response", "Se subio");
 
         }
 
