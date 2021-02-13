@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/grad5"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -58,6 +58,7 @@
                 android:orientation="vertical">
 
                 <ScrollView
+                    android:id="@+id/scroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -67,68 +68,11 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:id="@+id/imageView6"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1.5"
-                                app:srcCompat="@drawable/camara" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight=".05"
-                                android:orientation="horizontal"></LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/textView18"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:text="Tipo Alerta" />
-
-                                <TextView
-                                    android:id="@+id/textView15"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:text="No hay flama" />
-
-                                <TextView
-                                    android:id="@+id/textView14"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:text="Tomado el día y hora" />
-
-                                <TextView
-                                    android:id="@+id/textView13"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:text="distancia = " />
-
-                                <TextView
-                                    android:id="@+id/textView12"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:text="No hay lluvia" />
-                            </LinearLayout>
-
-                        </LinearLayout>
-
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal" />
                     </LinearLayout>
                 </ScrollView>
             </LinearLayout>
@@ -136,7 +80,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight=".8"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -146,7 +90,7 @@
                     android:orientation="horizontal"></LinearLayout>
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/btnRegistroDatos"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

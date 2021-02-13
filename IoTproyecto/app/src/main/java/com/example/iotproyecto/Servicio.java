@@ -117,10 +117,8 @@ public class Servicio  extends Service {
     }
 
     public void Alertas(@NonNull DataSnapshot snapshot){
-        Log.i("Servicio1", snapshot.getValue().toString());
-
        if (control!=0) {
-           Log.i("Servicio2", snapshot.getValue().toString());
+
            switch (snapshot.getValue().toString()){
                case "Llama":
                    sendOnChannel1();
@@ -128,7 +126,7 @@ public class Servicio  extends Service {
                case "Movimiento":
                    sendOnChannel3();
                    break;
-               case "Luvia":
+               case "Lluvia":
                    sendOnChannel2();
                    break;
            }
@@ -143,7 +141,7 @@ public class Servicio  extends Service {
         String message = "Se ha detectado fuego";
 
         Notification notification = new NotificationCompat.Builder(Servicio.this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.camara)
+                .setSmallIcon(R.drawable.fuego)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -154,10 +152,11 @@ public class Servicio  extends Service {
 
 
     public void sendOnChannel2() {  //NOTIFICATION 2
+        Log.i("Mens","aqui2");
         String title = "Lluvia";
         String message = "Corre y mete la ropa";
         Notification notification = new NotificationCompat.Builder(Servicio.this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.camara)
+                .setSmallIcon(R.drawable.lluvia1)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -172,7 +171,7 @@ public class Servicio  extends Service {
         String message = "Se ha detectado movimiento";
 
         Notification notification = new NotificationCompat.Builder(Servicio.this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.camara)
+                 .setSmallIcon(R.drawable.movimiento)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
