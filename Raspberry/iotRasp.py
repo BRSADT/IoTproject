@@ -22,8 +22,8 @@ global flag
 flag=False
 global s
 s=Streaming
-global NotStreaming
-NotStreaming=True
+global CameraNotBusy
+CameraNotBusy=True
 config ={
     
     "apiKey": "AIzaSyAOM_eU6X1MYFw2162jFbulgMo4jWUbzLg",
@@ -42,19 +42,20 @@ inicioS1=0
 inicioS2=0
 inicioS3=0
 inicioS4=0
+inicioS5=0
 #STREAMING
 #Maneja la señal para detener el streaming
 def handle_signal(sig, frame):
     global s
-    global NotStreaming
+    global CameraNotBusy
     print('señall'+str(sig))
     if sig == SIGINT:
         print("dying")
-        NotStreaming=True
+        CameraNotBusy=True
         s.StopStream()
         
 def CrearFork():#Paralelo
-    global NotStreaming
+    global CameraNotBusy
     pid=os.fork()
     
     if pid ==0 :
@@ -74,7 +75,7 @@ def CrearFork():#Paralelo
             print("wait")
             sleep(2)
         print("se activo, muere hijo")
-        NotStreaming=True;
+        CameraNotBusy=True;
         kill(pid,SIGINT)        
 
 #AWS
@@ -142,11 +143,11 @@ def upload_file(file_name, bucket, object_name=None):
 
     #streaming
 def stream_Camara(datos):
-      global NotStreaming
+      global CameraNotBusy
       global inicioS4
       global flag
       if inicioS4!=0:
-        NotStreaming=False;
+        CameraNotBusy=False;
         print("aleeerta para streaming")  
         global modoAlerta
         CMR=datos["data"]
@@ -155,7 +156,7 @@ def stream_Camara(datos):
             flag=False
             CrearFork()
         else:
-            NotStreaming=True;
+            CameraNotBusy=True;
       else:
           inicioS4=1
           
@@ -238,7 +239,24 @@ def stream_CambioSensores(datos):
         global TimeForPicture
         TimeForPicture=segundos
       else:
-          inicioS2=1  
+          inicioS2=1
+          
+def stream_TomarFoto(datos):
+      global inicioS5
+      global CameraNotBusy
+      if inicioS5!=0:
+        CameraNotBusy=False
+        print(datos["data"]) # {'title': 'Pyrebase', "body": "etc..."}
+        if datos["data"]=="Si":
+            TomarFoto()
+            CameraNotBusy=True
+            data = {"No"}
+            db.child("BaseDeDatos").child("TomarFoto").set("No")
+  
+      else:
+          inicioS5=1  
+
+
 def stream_CambioSensoresFoto(datos):
       global inicioS3
       if inicioS3!=0:
@@ -266,34 +284,7 @@ def stream_CambioSensoresFoto(datos):
         print(res)
       else:
          inicioS3=1
-         
-         
-modoAlerta="false";
-modoLluvia="false";
-modoLlama="false";
-
-firebase = pyrebase.initialize_app(config)
-db=firebase.database()
-storage = firebase.storage()
-ellapsedPicture=0;
-startTimePicture=time.time()
-TimeForPicture=60
-sensor = DistanceSensor(23, 24)
-no_rain = InputDevice(18)
-#Streams Firebase
-my_stream = db.child("BaseDeDatos/SolicitudImagenes").stream(stream_ProcesarImagenes)
-second_stream = db.child("BaseDeDatos/CambioSensores").stream(stream_CambioSensores)
-third_stream = db.child("BaseDeDatos/CambioSensoresFoto").stream(stream_CambioSensoresFoto)
-stream_Camara = db.child("BaseDeDatos/Camara").stream(stream_Camara)
-
-
-
-while True:
-    print("estado streaming"+str(NotStreaming))
-    if NotStreaming==True:
-        ellapsedPicture=(time.time()-startTimePicture)
-        print (ellapsedPicture)
-        if(ellapsedPicture>float(TimeForPicture)):#tomara datos de los sensores
+def TomarFoto():
             camera = PiCamera();
             print("TomaraFoto")
             now=datetime.now()
@@ -316,8 +307,35 @@ while True:
             data = {"Fecha": fecha ,"Hora": hora , "Ruta":ruta, "Tipo": "Registro" }
             db.child("BaseDeDatos").child("HistorialSensores").child(tituloFoto).set(data)
             
-            
-            
+         
+modoAlerta="false";
+modoLluvia="false";
+modoLlama="false";
+
+firebase = pyrebase.initialize_app(config)
+db=firebase.database()
+storage = firebase.storage()
+ellapsedPicture=0;
+startTimePicture=time.time()
+TimeForPicture=250
+sensor = DistanceSensor(23, 24)
+no_rain = InputDevice(18)
+#Streams Firebase
+my_stream = db.child("BaseDeDatos/SolicitudImagenes").stream(stream_ProcesarImagenes)
+second_stream = db.child("BaseDeDatos/CambioSensores").stream(stream_CambioSensores)
+third_stream = db.child("BaseDeDatos/CambioSensoresFoto").stream(stream_CambioSensoresFoto)
+stream_Camara = db.child("BaseDeDatos/Camara").stream(stream_Camara)
+stream_TomarFoto = db.child("BaseDeDatos/TomarFoto").stream(stream_TomarFoto)
+
+
+
+while True:
+    print("estado streaming"+str(CameraNotBusy))
+    if CameraNotBusy==True:
+        ellapsedPicture=(time.time()-startTimePicture)
+        print (ellapsedPicture)
+        if(ellapsedPicture>float(TimeForPicture)):#tomara datos de los sensores
+            TomarFoto()          
             print("%s"% i)
             i=i+1
             startTimePicture=time.time()
