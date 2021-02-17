@@ -205,6 +205,61 @@ public class Historial extends AppCompatActivity {
                             layoutContenido.get(layoutContenido.size() - 1).addView(Fotografias.get(Fotografias.size()-1));
 
                    break;
+                case "ResponseDeteccion":
+                    String res="";
+                    Log.d("snapValorDet", child.getKey() );// dice la etiqueta, por ejemplo Age Range
+                    if (child.hasChildren()){
+                            for (DataSnapshot child2: child.getChildren()){
+
+                                Log.d("snapc2Valor", child2.getKey() ); //regresa 0
+                                Log.d("snapc2Valor", child2.getValue().toString());
+                                 res="";
+                                switch(child2.getKey()){
+                                    case "0":
+
+                                        for (DataSnapshot child3: child2.getChildren()){
+                                            switch (child3.getKey()) {
+                                                case "Similarity":
+                                                    res+=child3.getValue().toString();
+                                                    break;
+                                                case "Face":
+                                                    for (DataSnapshot child4: child3.getChildren()){
+                                                        Log.d("snapc3Valor", child4.getValue().toString());
+
+                                                        switch (child4.getKey()) {
+                                                            case "ExternalImageId":
+                                                                res=child4.getValue().toString()+" "+res;
+                                                                break;
+                                                        }
+                                                    }
+
+                                                    break;
+                                            }
+                                        }
+                                    break;
+
+                                }
+                                Log.d("snapRes", res);
+                                NombreIdentificado.add(new TextView(Historial.this));
+                                NombreIdentificado.get(NombreIdentificado.size()-1).setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0, 1.0f));
+                                NombreIdentificado.get(NombreIdentificado.size()-1).setText(res);
+                                layoutDatos.get(layoutDatos.size()-1).addView(NombreIdentificado.get(NombreIdentificado.size()-1));
+
+                            }
+
+                    }else {
+                         res = child.getValue().toString();
+                        Log.d("snap Res", res);
+                        NombreIdentificado.add(new TextView(Historial.this));
+                        NombreIdentificado.get(NombreIdentificado.size()-1).setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0, 1.0f));
+                        NombreIdentificado.get(NombreIdentificado.size()-1).setText(res);
+                        layoutDatos.get(layoutDatos.size()-1).addView(NombreIdentificado.get(NombreIdentificado.size()-1));
+
+                    }
+
+
+                    break;
+
                 case "Tipo":
                     TipoAlerta.add(new TextView(Historial.this));
                     TipoAlerta.get(TipoAlerta.size()-1).setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0, 1.0f));

@@ -41,9 +41,6 @@ public class Servicio  extends Service {
         return null;
     }
 
-
-
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -64,11 +61,6 @@ public class Servicio  extends Service {
         }
 
     }
-
-
-
-
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         notificationManager = NotificationManagerCompat.from(Servicio.this);
@@ -76,11 +68,8 @@ public class Servicio  extends Service {
        //          notificationManager = NotificationManagerCompat.from(Servicio.this);
          //               sendOnChannel1();
         myRef = database.getReference("BaseDeDatos");
-
         myRef.child("Sensores").addChildEventListener(new ChildEventListener() {
-
-
-            @Override
+         @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Log.i("Servicio", "Cambio");
                 Alertas(snapshot);
@@ -92,7 +81,6 @@ public class Servicio  extends Service {
                 Alertas(snapshot);
 
             }
-
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 Alertas(snapshot);
@@ -108,14 +96,8 @@ public class Servicio  extends Service {
 
             }
         });
-
-
-
-
-
         return START_STICKY;
     }
-
     public void Alertas(@NonNull DataSnapshot snapshot){
        if (control!=0) {
 
@@ -135,7 +117,6 @@ public class Servicio  extends Service {
 
        }
     }
-
     public void sendOnChannel1() { //NOTIFICATION 1
         String title = "Fuego";
         String message = "Se ha detectado fuego";
@@ -149,8 +130,6 @@ public class Servicio  extends Service {
                 .build();
         notificationManager.notify(30, notification);
     }
-
-
     public void sendOnChannel2() {  //NOTIFICATION 2
         Log.i("Mens","aqui2");
         String title = "Lluvia";
@@ -164,8 +143,6 @@ public class Servicio  extends Service {
                 .build();
         notificationManager.notify(35, notification);
     }
-
-
     public void sendOnChannel3() { //NOTIFICATION 3
         String title = "Movimiento";
         String message = "Se ha detectado movimiento";

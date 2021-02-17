@@ -76,13 +76,6 @@
                     android:orientation="vertical">
 
                     <Switch
-                        android:id="@+id/Alertallama"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:text="Alera Llama" />
-
-                    <Switch
                         android:id="@+id/AlertaLLuvia"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"

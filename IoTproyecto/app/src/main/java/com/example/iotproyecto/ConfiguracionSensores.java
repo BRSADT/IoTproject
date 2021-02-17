@@ -34,7 +34,7 @@ import java.io.InputStream;
 public class ConfiguracionSensores extends AppCompatActivity {
 
 
-    Switch modoAlerta,Alertallama,AlertaLLuvia;
+    Switch modoAlerta,AlertaLLuvia;
     EditText inputSegundos, inputNombre;
     Button btnEnviar;
     ImageButton imageButton;
@@ -49,8 +49,9 @@ public class ConfiguracionSensores extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference myRef;
     StorageReference FolderImageProc;
-
-
+    String Slluvia,Sllama,SmodoAlerta;
+    FirebaseUser user;
+    byte[] data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class ConfiguracionSensores extends AppCompatActivity {
         inputSegundos = (EditText) findViewById(R.id.inputSegundos);
         inputNombre = (EditText) findViewById(R.id.inputNombre);
         modoAlerta = (Switch) findViewById(R.id.modoAlerta);
-        Alertallama = (Switch) findViewById(R.id.Alertallama);
+//        Alertallama = (Switch) findViewById(R.id.Alertallama);
         AlertaLLuvia = (Switch) findViewById(R.id.AlertaLLuvia);
         imageButton = (ImageButton) findViewById(R.id.imageButton);
 
@@ -144,10 +145,8 @@ public class ConfiguracionSensores extends AppCompatActivity {
 
     public void subirDatos(boolean Foto) {
 
-        String Slluvia,Sllama,SmodoAlerta;
 
         Slluvia = AlertaLLuvia.isChecked() == true ? "true" : "false";
-        Sllama = Alertallama.isChecked() == true ? "true" : "false";
         SmodoAlerta = modoAlerta.isChecked() == true ? "true" : "false";
         if (Foto) {
             storage = FirebaseStorage.getInstance();
@@ -158,14 +157,14 @@ public class ConfiguracionSensores extends AppCompatActivity {
             Log.i("Response", "Success");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
+            data = baos.toByteArray();
             pictureRef = FolderImageProc.child(mAuth.getUid() + "/" + inputNombre.getText().toString()); //subir foto
 
 
-            FirebaseUser user = mAuth.getCurrentUser();
+            user = mAuth.getCurrentUser();
             user.getUid();
+            Toast.makeText(ConfiguracionSensores.this, "Se subira", Toast.LENGTH_SHORT).show();
 
-            myRef.child("CambioSensoresFoto").child("Usuario").setValue(new ConfigSensores(inputNombre.getText().toString(),SmodoAlerta,inputSegundos.getText().toString(),user.getUid(),data.toString(),Sllama,Slluvia));
 
 
             UploadTask uploadTask = pictureRef.putBytes(data);
@@ -182,10 +181,13 @@ public class ConfiguracionSensores extends AppCompatActivity {
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                     // ...
                     Toast.makeText(ConfiguracionSensores.this, "Se subio la imagen", Toast.LENGTH_SHORT).show();
+                    myRef.child("CambioSensoresFoto").child("Usuario").setValue(new ConfigSensores(inputNombre.getText().toString(),SmodoAlerta,inputSegundos.getText().toString(),user.getUid(),data.toString(),Sllama,Slluvia));
 
                     Log.i("Response", "Se subio");
                 }
             });
+
+
 
         } else {
 

@@ -34,7 +34,6 @@ public class Streaming extends AppCompatActivity implements LifecycleObserver {
         myRef = database.getReference("BaseDeDatos");
         myRef.child("Camara").setValue(camara);
          webview = (WebView) findViewById(R.id.webVista);
-        Toast.makeText(this,"In Foreground",Toast.LENGTH_LONG).show(); //activar camara
 
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,30 +54,31 @@ public class Streaming extends AppCompatActivity implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     public void appInPauseState() {
-        Toast.makeText(this,"In Background",Toast.LENGTH_LONG).show();
+
+
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)//AL SALIR
     public void appInStopState() {
-        Toast.makeText(this,"In stop",Toast.LENGTH_LONG).show(); //desactivar camara
+
         String camara="NoStreaming";
         myRef.child("Camara").setValue(camara);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void appInDestroyState() {
-        Toast.makeText(this,"In destroy",Toast.LENGTH_LONG).show();
+
+
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void appInCreateState() {
-        Toast.makeText(this,"In create",Toast.LENGTH_LONG).show();//activar camara
+
         String camara="Streaming";
         myRef.child("Camara").setValue(camara);
     }
 
     public void onBackPressed(){
-        Toast.makeText(this,"Atras",Toast.LENGTH_LONG).show(); //hacer que se vaya a menu y desactivar camara
         Intent i = new Intent(Streaming.this, Menu.class);
         String camara="NoStreaming";
         myRef.child("Camara").setValue(camara);
