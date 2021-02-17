@@ -1,7 +1,7 @@
 import time
 import serial
 try:
-    port = serial.Serial("/dev/rfcomm0", baudrate=9600)
+    port = serial.Serial("/dev/rfcomm2", baudrate=9600)
 except:
     print("there is no bluetooth")
 from picamera import PiCamera
@@ -11,7 +11,7 @@ import pyrebase
 import boto3
 import os 
 from botocore.exceptions import ClientError
-from gpiozero import DistanceSensor,InputDevice
+from gpiozero import DistanceSensor,InputDevice,Button,Buzzer
 #Streaming
 import Streaming
 import os,signal
@@ -97,12 +97,27 @@ def RekognitionAttributes(file_name, bucket):
     return response
 
 
- 
+def BuscarRostro(Name):
+    client = boto3.client('rekognition')
+    response=client.search_faces_by_image(
+    CollectionId='ColeccionGlobal2',
+    Image={
+       
+        'S3Object': {
+                'Bucket' : 'raspsam',
+                'Name' : Name
+                            
+            }
+        },
+    MaxFaces=5,
+    QualityFilter='AUTO'
+    )
+    return response
         
 def AgregarRostro(path,Name,ImageId):
     client = boto3.client('rekognition')
     response=client.index_faces(
-        CollectionId='UsuariosPermitidos',
+        CollectionId='ColeccionGlobal2',
         Image={
        
             'S3Object': {
@@ -271,10 +286,12 @@ def stream_CambioSensoresFoto(datos):
         print("Path "+path)
         PathCompletoStorage="PersonasReconocidas/"+path+"/"+idFoto
         print("Storage "+PathCompletoStorage)
+        sleep(2)
         PathRasp="/home/pi/Desktop/IoT/IoTproject/PersonasReconocidas/"+path+"/"+idFoto+".jpg"
         if not os.path.exists("/home/pi/Desktop/IoT/IoTproject/PersonasReconocidas/"+path):
             os.makedirs("/home/pi/Desktop/IoT/IoTproject/PersonasReconocidas/"+path)
         storage.child(PathCompletoStorage).download(PathRasp) #aqui bien
+        #storage.child("PersonasReconocidas/2PRU3spGgcg8S4AMJl96NQCWpAH3/saan").download(PathRasp) 
         print("path rasp "+PathRasp)
         PathAWS="FotosPersonas/"+idFoto+".jpg"
         upload_file(PathRasp,'raspsam',PathAWS)
@@ -286,6 +303,7 @@ def stream_CambioSensoresFoto(datos):
          inicioS3=1
 def TomarFoto():
             camera = PiCamera();
+            camera.rotation=180
             print("TomaraFoto")
             now=datetime.now()
             titulo =now.strftime("%d%m%Y%H%M");
@@ -304,11 +322,64 @@ def TomarFoto():
             print("fecha",fecha)
             storage.child("FotosTomadas/"+tituloFoto+".jpg").put("/home/pi/Desktop/IoT/IoTproject/FotosTomadas/Foto.jpg")
             ruta="FotosTomadas/"+tituloFoto+".jpg"
-            data = {"Fecha": fecha ,"Hora": hora , "Ruta":ruta, "Tipo": "Registro" }
+            data = {"Fecha": fecha ,"Hora": hora , "Ruta":ruta, "Tipo": "Registro","ResponseDeteccion":" " }
             db.child("BaseDeDatos").child("HistorialSensores").child(tituloFoto).set(data)
             
-         
-modoAlerta="false";
+def TomarFotoBoton():
+            camera = PiCamera();
+            camera.rotation=180
+            now=datetime.now()
+            tituloFoto =now.strftime("%d%m%Y%H%M");
+            buzz.on()
+            sleep(0.8)
+            buzz.off()
+            sleep(0.1)
+            buzz.on()
+            sleep(0.8)
+            buzz.off()
+            sleep(0.1)
+            buzz.on()
+            sleep(0.8)
+            buzz.off()
+            sleep(0.1)
+            camera.start_preview()
+            sleep(5)
+            camera.capture("/home/pi/Desktop/IoT/IoTproject/FotosTomadas/"+tituloFoto+".jpg")
+            print("foto tomada")
+            camera.stop_preview()
+            camera.close()
+            buzz.on()
+            sleep(0.1)
+            buzz.off()
+            sleep(0.1)
+            buzz.on()
+            sleep(0.1)
+            buzz.off()
+            sleep(0.1)
+            print("fecha",tituloFoto)
+            hora=now.strftime("%H:%M");
+            fecha=now.strftime("%d/%m/%Y");
+            print("hora",hora)
+            print("fecha",fecha)
+            storage.child("FotosTomadas/"+tituloFoto+".jpg").put("/home/pi/Desktop/IoT/IoTproject/FotosTomadas/"+tituloFoto+".jpg")
+            ruta="/home/pi/Desktop/IoT/IoTproject/FotosTomadas/"+tituloFoto+".jpg"
+            PathAWS="FotosReconocimiento/"+tituloFoto+".jpg"
+            upload_file(ruta,'raspsam',PathAWS)
+            try :
+                response=BuscarRostro(PathAWS)
+                print (response)
+                if response['FaceMatches'] ==[]:
+                    data = {"Fecha": fecha ,"Hora": hora , "Ruta":"FotosTomadas/"+tituloFoto+".jpg", "Tipo": "Deteccion Movimiento", "ResponseDeteccion":"No detecto coincidencias" }
+                else:
+                    data = {"Fecha": fecha ,"Hora": hora , "Ruta":"FotosTomadas/"+tituloFoto+".jpg", "Tipo": "Deteccion Movimiento", "ResponseDeteccion":response["FaceMatches"] }
+                     
+                db.child("BaseDeDatos").child("HistorialSensores").child(tituloFoto).set(data)
+            except:
+                print("No hubo cara")
+           
+
+
+modoAlerta="true";
 modoLluvia="false";
 modoLlama="false";
 
@@ -319,6 +390,9 @@ ellapsedPicture=0;
 startTimePicture=time.time()
 TimeForPicture=250
 sensor = DistanceSensor(23, 24)
+button= Button(2)
+buzz    = Buzzer(26)
+
 no_rain = InputDevice(18)
 #Streams Firebase
 my_stream = db.child("BaseDeDatos/SolicitudImagenes").stream(stream_ProcesarImagenes)
@@ -330,7 +404,7 @@ stream_TomarFoto = db.child("BaseDeDatos/TomarFoto").stream(stream_TomarFoto)
 
 
 while True:
-    print("estado streaming"+str(CameraNotBusy))
+    print("estado not streaming"+str(CameraNotBusy))
     if CameraNotBusy==True:
         ellapsedPicture=(time.time()-startTimePicture)
         print (ellapsedPicture)
@@ -342,14 +416,31 @@ while True:
     #Lecturas 
     if modoAlerta=="true":
         print(sensor.distance)
-        if sensor.distance<.03:
+        if sensor.distance<.5:
+            ellapsedTimeMovement=0
+            flagPicture=False
             print("Movimiento")
             data = {"Alerta": "Movimiento"}
             db.child("BaseDeDatos").child("Sensores").set(data)
-            sleep(20)
+            sleep(2)
             data = {"Alerta": "None"}
             db.child("BaseDeDatos").child("Sensores").set(data)
-            
+            while ellapsedTimeMovement<600  and flagPicture==False :
+                print("tiempo"+str(ellapsedTimeMovement))
+                if button.is_pressed:
+                    flagPicture=True
+                    print("Button is pressed")
+                    TomarFotoBoton()
+                else:
+                    buzz.on()
+                    sleep(0.4)
+                    buzz.off()
+                    sleep(0.1)
+                    print ("Button is not pressed")
+                    ellapsedTimeMovement+=1
+                
+                sleep(.1)
+            sleep(30) 
     if modoLluvia=="true":
         print("detectara lluvia")
         if  no_rain.is_active:

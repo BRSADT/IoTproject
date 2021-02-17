@@ -76,7 +76,8 @@ def StartStream():
     global server
     print("--->start Streaming")
     #with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
-    camera=picamera.PiCamera()        
+    camera=picamera.PiCamera()
+    camera.rotation=180
     global output
     output= StreamingOutput()
     #Uncomment the next line to change your Pi's Camera rotation (in degrees)

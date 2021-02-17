@@ -3,7 +3,7 @@ import boto3
 
 client = boto3.client('rekognition')
 response=client.search_faces_by_image(
-    CollectionId='Sam',
+    CollectionId='ColeccionGlobal',
     Image={
        
         'S3Object': {

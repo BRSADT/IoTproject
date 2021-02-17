@@ -12,7 +12,7 @@ def create_collection(collection_id):
     print('Done...')
     
 def main():
-    collection_id='UsuariosPermitidos'
+    collection_id='ColeccionGlobal2'
     create_collection(collection_id)
 
 if __name__ == "__main__":
